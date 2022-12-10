@@ -1,6 +1,6 @@
 <template>
   <div class="mod-home">
-    <h1>欢迎使用健身房管理系统</h1>
+    <h1>欢迎使用疫情防控管理系统</h1>
   </div>
 </template>
 
