@@ -38,13 +38,13 @@
         prop="maintainDate"
         header-align="center"
         align="center"
-        label="养护日期">
+        label="上次养护日期">
       </el-table-column>
       <el-table-column
         prop="cleanDate"
         header-align="center"
         align="center"
-        label="养护日期">
+        label="上次清洁日期">
       </el-table-column>
       <el-table-column
         prop="maintainFreq"
@@ -56,7 +56,7 @@
         prop="fix"
         header-align="center"
         align="center"
-        label="是否维修">
+        label="维修数量">
       </el-table-column>
       <el-table-column
         prop="manufacture"

@@ -17,7 +17,7 @@
       placeholder="选择日期时间">
     </el-date-picker>
     </el-form-item>
-    <el-form-item label="养护日期" prop="expriationDate">
+    <el-form-item label="上次养护日期" prop="maintainDate">
       <!-- <el-input v-model="dataForm.expriationDate" placeholder="效期日期"></el-input> -->
       <el-date-picker
       v-model="dataForm.maintainDate"
@@ -27,7 +27,7 @@
       placeholder="选择日期时间">
     </el-date-picker>
     </el-form-item>
-    <el-form-item label="清洁日期" prop="expriationDate">
+    <el-form-item label="上次清洁日期" prop="cleanDate">
       <!-- <el-input v-model="dataForm.expriationDate" placeholder="效期日期"></el-input> -->
       <el-date-picker
       v-model="dataForm.cleanDate"
@@ -37,8 +37,8 @@
       placeholder="选择日期时间">
     </el-date-picker>
     </el-form-item>
-    <el-form-item label="是否维修" prop="fix">
-      <el-input v-model="dataForm.fix" placeholder="是否维修"></el-input>
+    <el-form-item label="维修数量" prop="fix">
+      <el-input v-model="dataForm.fix" placeholder="维修数量"></el-input>
     </el-form-item>
     <el-form-item label="养护周期" prop="fix">
       <el-input v-model="dataForm.maintainFreq" placeholder="养护周期"></el-input>
