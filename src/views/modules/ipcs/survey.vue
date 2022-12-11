@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="请输入姓名查询" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -15,6 +15,7 @@
       border
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
+      :cell-class-name="tableCellClassName"
       style="width: 100%;">
       <el-table-column
         type="selection"
@@ -107,6 +108,16 @@
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
+
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>
 
 <script>
   import AddOrUpdate from './survey-add-or-update'
@@ -205,7 +216,20 @@
             }
           })
         })
+      },
+      //表格警示颜色
+      tableCellClassName({row, column, rowIndex, columnIndex}){
+        
+          if((row.fever == '是' && columnIndex ==6) ||(row.content1 == '是' && columnIndex ==8) 
+          ||(row.content2 == '是' && columnIndex ==9) ||(row.content3 == '是' && columnIndex ==10) 
+          ){
+            return 'warning-row';
+          }
+          if(columnIndex ==7 && row.temperature>=38){
+            return 'warning-row';
+          }
       }
     }
   }
 </script>
+
