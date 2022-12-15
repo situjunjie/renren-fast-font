@@ -56,12 +56,6 @@
         label="生日">
       </el-table-column>
       <el-table-column
-        prop="cardType"
-        header-align="center"
-        align="center"
-        label="卡类型">
-      </el-table-column>
-      <el-table-column
         prop="mobile"
         header-align="center"
         align="center"
