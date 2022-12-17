@@ -10,8 +10,8 @@
     <el-form-item label="性别" prop="gender">
       <el-input v-model="dataForm.gender" placeholder="性别"></el-input>
     </el-form-item>
-    <el-form-item label="性别" prop="age">
-      <el-input v-model="dataForm.age" placeholder="性别"></el-input>
+    <el-form-item label="年龄" prop="age">
+      <el-input v-model="dataForm.age" placeholder="年龄"></el-input>
     </el-form-item>
     <el-form-item label="隔离地点" prop="isolationAddr">
       <el-input v-model="dataForm.isolationAddr" placeholder="隔离地点"></el-input>
@@ -23,10 +23,23 @@
       <el-input v-model="dataForm.time" placeholder="时长(天)"></el-input>
     </el-form-item>
     <el-form-item label="开始时间" prop="beginTime">
-      <el-input v-model="dataForm.beginTime" placeholder="开始时间"></el-input>
+      <!-- <el-input v-model="dataForm.beginTime" placeholder="开始时间"></el-input> -->
+      <el-date-picker
+      v-model="dataForm.beginTime"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm:ss"
+
+      placeholder="开始时间">
+    </el-date-picker>
     </el-form-item>
     <el-form-item label="结束时间" prop="endTime">
-      <el-input v-model="dataForm.endTime" placeholder="结束时间"></el-input>
+      <!-- <el-input v-model="dataForm.endTime" placeholder="结束时间"></el-input> -->
+      <el-date-picker
+      v-model="dataForm.endTime"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm:ss"
+      placeholder="结束时间">
+    </el-date-picker>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

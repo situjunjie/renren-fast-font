@@ -22,12 +22,12 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="id"
         header-align="center"
         align="center"
         label="主键id">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="name"
         header-align="center"
@@ -44,7 +44,7 @@
         prop="age"
         header-align="center"
         align="center"
-        label="性别">
+        label="年龄">
       </el-table-column>
       <el-table-column
         prop="isolationAddr"

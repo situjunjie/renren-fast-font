@@ -5,13 +5,29 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
     <el-form-item label="隔离类型" prop="type">
-      <el-input v-model="dataForm.type" placeholder="隔离类型"></el-input>
+      <!-- <el-input v-model="dataForm.type" placeholder="隔离类型"></el-input> -->
+      <el-select v-model="dataForm.type" placeholder="隔离类型">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
     </el-form-item>
     <el-form-item label="时长(天)" prop="time">
       <el-input v-model="dataForm.time" placeholder="时长(天)"></el-input>
     </el-form-item>
     <el-form-item label="风险等级" prop="dangerLevel">
-      <el-input v-model="dataForm.dangerLevel" placeholder="风险等级"></el-input>
+      <!-- <el-input v-model="dataForm.dangerLevel" placeholder="风险等级"></el-input> -->
+      <el-select v-model="dataForm.dangerLevel" placeholder="风险等级">
+        <el-option
+      v-for="item in dangerLeveOpt"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+      </el-select>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -42,7 +58,29 @@
           dangerLevel: [
             { required: true, message: '风险等级不能为空', trigger: 'blur' }
           ]
+        },
+        options: [{
+          value: '居家隔离',
+          label: '居家隔离'
+        }, {
+          value: '健康监测',
+          label: '健康监测'
+        }, {
+          value: '集中隔离',
+          label: '集中隔离'
+        }],
+        dangerLeveOpt:[
+        {
+          value: '低风险',
+          label: '低风险'
+        }, {
+          value: '中风险',
+          label: '中风险'
+        }, {
+          value: '高风险',
+          label: '高风险'
         }
+        ]
       }
     },
     methods: {

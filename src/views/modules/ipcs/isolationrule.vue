@@ -22,12 +22,12 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="id"
         header-align="center"
         align="center"
         label="主键id">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="type"
         header-align="center"

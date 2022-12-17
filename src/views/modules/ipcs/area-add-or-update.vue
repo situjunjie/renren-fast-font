@@ -1,18 +1,34 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '修改风险等级'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="名称" prop="name">
-      <el-input v-model="dataForm.name" placeholder="名称"></el-input>
+    <el-form-item label="风险等级" prop="dangerLevel">
+      <!-- <el-input v-model="dataForm.dangerLevel" placeholder="风险等级"></el-input> -->
+      <!-- <el-radio v-model="dataForm.dangerLevel" label="0">无风险</el-radio>
+  <el-radio v-model="dataForm.dangerLevel" label="1">低风险</el-radio>
+  <el-radio v-model="dataForm.dangerLevel" label="2">中风险</el-radio>
+  <el-radio v-model="dataForm.dangerLevel" label="3">高风险</el-radio> -->
+  <el-select v-model="dataForm.dangerLevel" placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
     </el-form-item>
-    <el-form-item label="上级区域id" prop="parentId">
-      <el-input v-model="dataForm.parentId" placeholder="上级区域id"></el-input>
+    <el-form-item label="是否覆盖子区域等级" prop="overChildren">
+      <el-switch
+  v-model="dataForm.overChildren"
+  active-color="#13ce66"
+  inactive-color="#ff4949">
+</el-switch>
     </el-form-item>
-    <el-form-item label="层级" prop="level">
+    <!-- <el-form-item label="层级" prop="level">
       <el-input v-model="dataForm.level" placeholder="层级"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -28,21 +44,25 @@
         visible: false,
         dataForm: {
           id: 0,
-          name: '',
-          parentId: '',
-          level: ''
+          dangerLevel:0,
+          overChildren:true
         },
         dataRule: {
-          name: [
-            { required: true, message: '名称不能为空', trigger: 'blur' }
-          ],
-          parentId: [
-            { required: true, message: '上级区域id不能为空', trigger: 'blur' }
-          ],
-          level: [
-            { required: true, message: '层级不能为空', trigger: 'blur' }
-          ]
-        }
+          
+        },
+        options: [{
+          value: 0,
+          label: '无风险'
+        }, {
+          value: 1,
+          label: '低风险'
+        }, {
+          value: 2,
+          label: '中风险'
+        }, {
+          value: 3,
+          label: '高风险'
+        }]
       }
     },
     methods: {
@@ -58,9 +78,11 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
+                console.log('data',data.area);
                 this.dataForm.name = data.area.name
                 this.dataForm.parentId = data.area.parentId
                 this.dataForm.level = data.area.level
+                this.dataForm.dangerLevel = data.area.dangerLevel
               }
             })
           }
@@ -71,23 +93,22 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/ipcs/area/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/ipcs/area/${!this.dataForm.id ? 'save' : 'updateDangerLevel'}`),
               method: 'post',
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
-                'name': this.dataForm.name,
-                'parentId': this.dataForm.parentId,
-                'level': this.dataForm.level
+                'dangerLevel': this.dataForm.dangerLevel,
+                'overChildren': this.dataForm.overChildren
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.$message({
                   message: '操作成功',
                   type: 'success',
-                  duration: 1500,
+                  duration: 500,
                   onClose: () => {
                     this.visible = false
-                    this.$emit('refreshDataList')
+                    location.reload()
                   }
                 })
               } else {
