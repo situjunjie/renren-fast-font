@@ -18,6 +18,9 @@
       <el-form-item label="住址" prop="address">
         <el-input v-model="dataForm.address" placeholder="住址"></el-input>
       </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
+      </el-form-item>
       <el-form-item label="是否发热" prop="fever">
         <el-radio v-model="dataForm.fever" label="是">是</el-radio>
         <el-radio v-model="dataForm.fever" label="否">否</el-radio>
@@ -33,6 +36,9 @@
         <el-radio v-model="dataForm.content2" label="是">是</el-radio>
         <el-radio v-model="dataForm.content2" label="否">否</el-radio> </el-form-item>
       <el-form-item label="是否有与次密接、密接患者有时空接触" prop="content3">
+        <el-radio v-model="dataForm.content3" label="是">是</el-radio>
+        <el-radio v-model="dataForm.content3" label="否">否</el-radio> </el-form-item>
+        <el-form-item label="是否需要做核酸" prop="content3">
         <el-radio v-model="dataForm.content3" label="是">是</el-radio>
         <el-radio v-model="dataForm.content3" label="否">否</el-radio> </el-form-item>
     </el-form>
@@ -59,7 +65,9 @@ export default {
         temperature: '',
         content1: '',
         content2: '',
-        content3: ''
+        content3: '',
+        mobile: '',
+        acid: '',
       },
       dataRule: {
         name: [
@@ -118,6 +126,8 @@ export default {
               this.dataForm.content1 = data.survey.content1
               this.dataForm.content2 = data.survey.content2
               this.dataForm.content3 = data.survey.content3
+              this.dataForm.mobile = data.survey.mobile
+              this.dataForm.acid = data.survey.acid
             }
           })
         }
@@ -141,7 +151,9 @@ export default {
               'temperature': this.dataForm.temperature,
               'content1': this.dataForm.content1,
               'content2': this.dataForm.content2,
-              'content3': this.dataForm.content3
+              'content3': this.dataForm.content3,
+              'acid' : this.dataForm.acid,
+              'mobile' : this.dataForm.mobile
             })
           }).then(({ data }) => {
             if (data && data.code === 0) {

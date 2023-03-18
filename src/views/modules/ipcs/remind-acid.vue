@@ -2,12 +2,12 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="请输入姓名查询" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ipcs:isolationrecord:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('ipcs:isolationrecord:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ipcs:survey:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('ipcs:survey:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -22,23 +22,11 @@
         align="center"
         width="50">
       </el-table-column>
-      <!-- <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        label="主键id">
-      </el-table-column> -->
       <el-table-column
         prop="name"
         header-align="center"
         align="center"
         label="姓名">
-      </el-table-column>
-      <el-table-column
-        prop="gender"
-        header-align="center"
-        align="center"
-        label="性别">
       </el-table-column>
       <el-table-column
         prop="age"
@@ -47,41 +35,36 @@
         label="年龄">
       </el-table-column>
       <el-table-column
+        prop="gender"
+        header-align="center"
+        align="center"
+        label="性别">
+      </el-table-column>
+      <el-table-column
+        prop="occupy"
+        header-align="center"
+        align="center"
+        label="职业">
+      </el-table-column>
+      <el-table-column
+        prop="address"
+        header-align="center"
+        align="center"
+        label="住址">
+      </el-table-column>
+      <el-table-column
         prop="mobile"
         header-align="center"
         align="center"
-        label="联系电话">
+        label="手机号">
       </el-table-column>
       <el-table-column
-        prop="isolationAddr"
+        prop="acid"
         header-align="center"
         align="center"
-        label="隔离地点">
+        label="是否要做核酸">
       </el-table-column>
-      <el-table-column
-        prop="type"
-        header-align="center"
-        align="center"
-        label="隔离类型">
-      </el-table-column>
-      <el-table-column
-        prop="time"
-        header-align="center"
-        align="center"
-        label="时长(天)">
-      </el-table-column>
-      <el-table-column
-        prop="beginTime"
-        header-align="center"
-        align="center"
-        label="开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="endTime"
-        header-align="center"
-        align="center"
-        label="结束时间">
-      </el-table-column>
+      
       <el-table-column
         fixed="right"
         header-align="center"
@@ -89,8 +72,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
+          <el-button type="text" size="small" @click="sendMsg(scope.row.id)">短信通知</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -108,8 +90,18 @@
   </div>
 </template>
 
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>
+
 <script>
-  import AddOrUpdate from './isolationrecord-add-or-update'
+  import AddOrUpdate from './survey-add-or-update'
   export default {
     data () {
       return {
@@ -136,7 +128,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/ipcs/isolationrecord/list'),
+          url: this.$http.adornUrl('/ipcs/survey/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -187,7 +179,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/ipcs/isolationrecord/delete'),
+            url: this.$http.adornUrl('/ipcs/survey/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
@@ -205,7 +197,29 @@
             }
           })
         })
+      },
+      sendMsg(id){
+          this.$http({
+            url: this.$http.adornUrl('/ipcs/survey/remindAcid'),
+            method: 'post',
+            data: this.$http.adornData(id, false)
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
       }
+     
     }
   }
 </script>
+

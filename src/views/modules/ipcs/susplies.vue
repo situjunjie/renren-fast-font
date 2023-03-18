@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ipcs:isolationrecord:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('ipcs:isolationrecord:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ipcs:susplies:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('ipcs:susplies:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -32,55 +32,43 @@
         prop="name"
         header-align="center"
         align="center"
-        label="姓名">
+        label="物资名称">
       </el-table-column>
       <el-table-column
-        prop="gender"
+        prop="status"
         header-align="center"
         align="center"
-        label="性别">
+        label="物资状态">
       </el-table-column>
       <el-table-column
-        prop="age"
+        prop="num"
         header-align="center"
         align="center"
-        label="年龄">
+        label="物资数量">
       </el-table-column>
       <el-table-column
-        prop="mobile"
+        prop="sendTime"
         header-align="center"
         align="center"
-        label="联系电话">
+        label="出库时间">
       </el-table-column>
       <el-table-column
-        prop="isolationAddr"
+        prop="inTime"
         header-align="center"
         align="center"
-        label="隔离地点">
+        label="入库时间">
       </el-table-column>
       <el-table-column
-        prop="type"
+        prop="sender"
         header-align="center"
         align="center"
-        label="隔离类型">
+        label="出库人">
       </el-table-column>
       <el-table-column
-        prop="time"
+        prop="receiver"
         header-align="center"
         align="center"
-        label="时长(天)">
-      </el-table-column>
-      <el-table-column
-        prop="beginTime"
-        header-align="center"
-        align="center"
-        label="开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="endTime"
-        header-align="center"
-        align="center"
-        label="结束时间">
+        label="入库人">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -90,6 +78,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button type="text" size="small" @click="sendHandle(scope.row.id)">出库</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -105,11 +94,28 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+
+    <!--出库弹出框 -->
+
+<el-dialog title="出库确认" :visible.sync="sendDialogVisible">
+  <el-form :model="form">
+    <el-form-item label="出库人" >
+      <el-input v-model="sendForm.sender" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="出库数量">
+      <el-input v-model="sendForm.num" autocomplete="off"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="sendDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="send">出库</el-button>
+  </div>
+</el-dialog>
   </div>
 </template>
 
 <script>
-  import AddOrUpdate from './isolationrecord-add-or-update'
+  import AddOrUpdate from './susplies-add-or-update'
   export default {
     data () {
       return {
@@ -122,7 +128,13 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        sendDialogVisible: false,
+        sendForm:{
+          id:'',
+          sender:'',
+          num:''
+        }
       }
     },
     components: {
@@ -136,7 +148,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/ipcs/isolationrecord/list'),
+          url: this.$http.adornUrl('/ipcs/susplies/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -187,7 +199,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/ipcs/isolationrecord/delete'),
+            url: this.$http.adornUrl('/ipcs/susplies/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
@@ -205,6 +217,36 @@
             }
           })
         })
+      },
+      sendHandle(id){
+        this.sendForm.id = id;
+        this.sendDialogVisible = true;
+      },
+      // 出库
+      send(){
+        this.$http({
+              url: this.$http.adornUrl(`/ipcs/susplies/send`),
+              method: 'post',
+              data: this.$http.adornData({
+                'id': this.sendForm.id,
+                'sender': this.sendForm.sender,
+                'num' : this.sendForm.num
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.sendDialogVisible = false
+                    this.$emit('refreshDataList')
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
       }
     }
   }

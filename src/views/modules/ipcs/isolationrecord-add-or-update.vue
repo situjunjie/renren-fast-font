@@ -13,6 +13,9 @@
     <el-form-item label="年龄" prop="age">
       <el-input v-model="dataForm.age" placeholder="年龄"></el-input>
     </el-form-item>
+    <el-form-item label="联系电话" prop="mobile">
+      <el-input v-model="dataForm.mobile" placeholder="联系电话"></el-input>
+    </el-form-item>
     <el-form-item label="隔离地点" prop="isolationAddr">
       <el-input v-model="dataForm.isolationAddr" placeholder="隔离地点"></el-input>
     </el-form-item>
@@ -63,7 +66,8 @@
           type: '',
           time: '',
           beginTime: '',
-          endTime: ''
+          endTime: '',
+          mobile:''
         },
         dataRule: {
           name: [
@@ -89,6 +93,9 @@
           ],
           endTime: [
             { required: true, message: '结束时间不能为空', trigger: 'blur' }
+          ],
+          mobile: [
+            { required: true, message: '联系电话不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -114,6 +121,7 @@
                 this.dataForm.time = data.isolationRecord.time
                 this.dataForm.beginTime = data.isolationRecord.beginTime
                 this.dataForm.endTime = data.isolationRecord.endTime
+                this.dataForm.mobile = data.isolationRecord.mobile
               }
             })
           }
@@ -135,7 +143,8 @@
                 'type': this.dataForm.type,
                 'time': this.dataForm.time,
                 'beginTime': this.dataForm.beginTime,
-                'endTime': this.dataForm.endTime
+                'endTime': this.dataForm.endTime,
+                'mobile' : this.dataForm.mobile,
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

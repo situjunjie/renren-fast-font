@@ -6,13 +6,14 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ipcs:isolationrecord:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('ipcs:isolationrecord:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ipcs:susplieslog:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('ipcs:susplieslog:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
       border
+      show-summary
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
@@ -22,65 +23,41 @@
         align="center"
         width="50">
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column
         prop="id"
         header-align="center"
         align="center"
         label="主键id">
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         prop="name"
         header-align="center"
         align="center"
-        label="姓名">
+        label="物资名称">
       </el-table-column>
       <el-table-column
-        prop="gender"
+        prop="num"
         header-align="center"
         align="center"
-        label="性别">
+        label="数量">
       </el-table-column>
       <el-table-column
-        prop="age"
+        prop="logTime"
         header-align="center"
         align="center"
-        label="年龄">
-      </el-table-column>
-      <el-table-column
-        prop="mobile"
-        header-align="center"
-        align="center"
-        label="联系电话">
-      </el-table-column>
-      <el-table-column
-        prop="isolationAddr"
-        header-align="center"
-        align="center"
-        label="隔离地点">
+        label="入出库时间">
       </el-table-column>
       <el-table-column
         prop="type"
         header-align="center"
         align="center"
-        label="隔离类型">
+        label="入出库动作">
       </el-table-column>
       <el-table-column
-        prop="time"
+        prop="operator"
         header-align="center"
         align="center"
-        label="时长(天)">
-      </el-table-column>
-      <el-table-column
-        prop="beginTime"
-        header-align="center"
-        align="center"
-        label="开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="endTime"
-        header-align="center"
-        align="center"
-        label="结束时间">
+        label="操作人">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -109,7 +86,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './isolationrecord-add-or-update'
+  import AddOrUpdate from './susplieslog-add-or-update'
   export default {
     data () {
       return {
@@ -136,7 +113,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/ipcs/isolationrecord/list'),
+          url: this.$http.adornUrl('/ipcs/susplieslog/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -187,7 +164,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/ipcs/isolationrecord/delete'),
+            url: this.$http.adornUrl('/ipcs/susplieslog/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {
